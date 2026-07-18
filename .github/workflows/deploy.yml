@@ -1,0 +1,48 @@
+name: Deploy helper-navi (manual trigger only)
+
+# ============================================================
+# 🌿 ヘルパー事業所ナビ デプロイワークフロー
+#
+# 重要：このワークフローは push しても自動実行されません。
+# GitHubの「Actions」タブから「Run workflow」ボタンを押したときだけ
+# 実行される、完全手動トリガー方式です（ちゃろさんの
+# 「WFのボタンを押した時に手動でデプロイしたい」というご要望に対応）。
+# 訪問看護ナビ（houmonkango）のdeploy.ymlと同じ方式です。
+# ============================================================
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- 1. リポジトリの取得 ---
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # --- 2. Python環境のセットアップ ---
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install pandas
+
+      # --- 3. build.pyを実行してdist/を生成 ---
+      - name: Run build.py
+        run: python3 build.py
+
+      # --- 4. Node.js環境のセットアップ（wrangler実行のため） ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # --- 5. Cloudflare Workersへデプロイ ---
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: "4"
