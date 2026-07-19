@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     🚧 公開前に必ず確認：本番公開の直前にこのnoindexタグを削除してください
+     ============================================================ -->
+<meta name="robots" content="noindex">
+
+<!-- 👑 サブドメイン未定のため仮URL。決定次第、下記canonicalとog:urlを更新してください -->
+<link rel="canonical" href="https://helper-navi.pray-power-is-god-and-cocoro.com/">
+
+<title>ヘルパー事業所ナビ｜訪問介護・居宅介護の事業所を電話・比較・紹介まで一画面で</title>
+<meta name="description" content="訪問介護（介護保険）・居宅介護（障害福祉）のヘルパー事業所を、現在地から近い順に検索。電話・FAX・比較・紹介までを一画面で支援する、相談員のためのツールです。">
+
+<!-- 👑 ファビコンは後日画像を設置予定。コードは仮設置済み -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     🚧 AdSense（公開準備が整うまでコメントアウト。有効化する際は
+     このスクリプトタグと、本文中の <ins class="adsbygoogle"> ブロックの
+     コメントを外してください。スクリプト呼び出しは合計1回のみです。
+     ============================================================
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2908004621823900" crossorigin="anonymous"></script>
+============================================================ -->
+
+<style>
+/* ============================================================
+   1. デザイントークン（色・フォント・余白の基準値）
+   👑 訪問看護ナビ（houmonkango）と同一トークンを流用し、
+   サイト間のブランド統一・実装コスト削減を図る
+   ============================================================ */
+:root{
+  --color-bg: #FAF8F3;
+  --color-surface: #FFFFFF;
+  --color-primary: #3D6B5C;
+  --color-primary-dark: #2A4C41;
+  --color-accent: #E0932E;
+  --color-text: #2B2B28;
+  --color-text-muted: #6E6B63;
+  --color-border: #E7E2D6;
+
+  --badge-kaigo-bg: #E9F1F8;    --badge-kaigo-fg: #2C5A80;    --badge-kaigo-bd: #9DC1DC;
+  --badge-shogai-bg: #F1E9F7;   --badge-shogai-fg: #6B4C93;   --badge-shogai-bd: #B79AD1;
+  --badge-seikatsuhogo-bg: #FCEEDF; --badge-seikatsuhogo-fg: #93591F; --badge-seikatsuhogo-bd: #E8B073;
+
+  --source-official-fg: #2A6B3D;
+  --source-ai-fg: #93591F;
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+  --shadow-card: 0 2px 10px rgba(43,43,40,0.06);
+
+  --font-display: 'Zen Maru Gothic', sans-serif;
+  --font-body: 'Noto Sans JP', sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.7;
+}
+
+a{ color: var(--color-primary-dark); }
+
+/* ============================================================
+   2. ヘッダー・免責バナー
+   ============================================================ */
+.site-header{
+  padding: 28px 20px 18px;
+  text-align: center;
+}
+.site-header h1{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 4vw, 30px);
+  color: var(--color-primary-dark);
+  margin: 0 0 6px;
+}
+.site-header p.tagline{
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: 14px;
+}
+.site-header p.concept{
+  max-width: 640px;
+  margin: 10px auto 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.disclaimer-banner{
+  max-width: 760px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  background: #FFF7E8;
+  border: 1px solid #EFD9A8;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #6B5623;
+}
+.disclaimer-banner strong{ color: #8A5A0E; }
+#specialtyNotice{ margin-top: 8px; font-weight: 700; }
+
+/* ============================================================
+   3. 検索エリア
+   ============================================================ */
+.search-panel{
+  max-width: 900px;
+  margin: 22px auto;
+  padding: 20px;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.locate-row{
+  display:flex;
+  gap:10px;
+  flex-wrap: wrap;
+  align-items:center;
+  margin-bottom: 16px;
+}
+
+.btn{
+  border:none;
+  border-radius: var(--radius-pill);
+  padding: 12px 22px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  cursor:pointer;
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.btn:active{ transform: scale(0.98); }
+
+.btn-primary{ background: var(--color-primary); color:#fff; }
+.btn-primary:hover{ background: var(--color-primary-dark); }
+
+.btn-outline{
+  background:#fff;
+  border:1.5px solid var(--color-border);
+  color: var(--color-text);
+}
+.btn-outline:hover{ border-color: var(--color-primary); }
+
+#locateStatus{
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.field-row{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.field-row select, .field-row input[type="text"]{
+  flex:1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.filter-group{ margin-bottom: 12px; }
+.filter-group .filter-label{
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  font-weight:700;
+}
+.chip-list{ display:flex; flex-wrap: wrap; gap: 8px; }
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  background:#fff;
+  font-size: 13px;
+  cursor:pointer;
+  user-select:none;
+}
+.chip input{ display:none; }
+.chip.checked{
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color:#fff;
+}
+
+/* ============================================================
+   4. 結果エリア
+   ============================================================ */
+.results-wrap{
+  max-width: 900px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+}
+
+.results-meta{
+  display:flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.station-card{
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  border-left: 6px solid var(--color-border);
+}
+.station-card.svc-care_insurance_homehelp{ border-left-color: var(--badge-kaigo-bd); }
+.station-card.svc-disability_kyotaku{ border-left-color: var(--badge-shogai-bd); }
+
+.card-top{
+  display:flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.card-name{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  margin: 0 0 4px;
+}
+.card-distance{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  white-space: nowrap;
+}
+
+.tag-badges{ display:flex; flex-wrap: wrap; gap:6px; margin: 8px 0 10px; }
+.tag-badge{
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid;
+  font-weight: 700;
+}
+.tag-badge.svc-care_insurance_homehelp{ background: var(--badge-kaigo-bg); color: var(--badge-kaigo-fg); border-color: var(--badge-kaigo-bd); }
+.tag-badge.svc-disability_kyotaku{ background: var(--badge-shogai-bg); color: var(--badge-shogai-fg); border-color: var(--badge-shogai-bd); }
+.tag-badge.seikatsuhogo{ background: var(--badge-seikatsuhogo-bg); color: var(--badge-seikatsuhogo-fg); border-color: var(--badge-seikatsuhogo-bd); }
+.tag-badge.hint{ opacity: 0.75; font-weight:500; background:#F1EFE7; color: var(--color-text-muted); border-color: var(--color-border); }
+.tag-badge.disability-ok{ opacity: 0.85; font-weight:500; background:#F1EFE7; color: var(--color-text-muted); border-color: var(--color-border); }
+
+.source-label{
+  font-size: 11px;
+  margin-top: 6px;
+}
+.source-label.official{ color: var(--source-official-fg); }
+.source-label.ai{ color: var(--source-ai-fg); }
+
+.card-address{ font-size: 14px; color: var(--color-text); margin: 10px 0; }
+
+.day-badges{ display:flex; gap:6px; margin-bottom: 12px; }
+.day-badge{
+  font-size:12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background:#F1EFE7;
+  color: var(--color-text-muted);
+}
+.day-badge.active{ background: var(--color-primary); color:#fff; }
+
+.card-actions{ display:flex; flex-wrap: wrap; gap: 8px; }
+.action-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  background:#fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration:none;
+  color: var(--color-text);
+  cursor:pointer;
+}
+.action-btn.call{ background: var(--color-accent); border-color: var(--color-accent); color:#fff; }
+.action-btn.map{ background: var(--color-primary); border-color: var(--color-primary); color:#fff; }
+.action-btn.fax{ background:#fff; }
+
+.card-remarks{ margin-top: 10px; font-size: 13px; color: var(--color-text-muted); }
+
+.load-more-wrap{ text-align:center; margin-top: 20px; }
+
+.empty-state{
+  text-align:center;
+  padding: 40px 20px;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+}
+
+/* ============================================================
+   5. SEOアコーディオンセクション
+   ============================================================ */
+.seo-section{
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+.seo-section h2{
+  font-family: var(--font-display);
+  color: var(--color-primary-dark);
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+.seo-item{
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.seo-item summary{
+  padding: 16px 20px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--color-primary-dark);
+  list-style: none;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+}
+.seo-item summary::-webkit-details-marker{ display:none; }
+.seo-item summary::after{
+  content: "+";
+  font-size: 22px;
+  color: var(--color-primary);
+  margin-left: 10px;
+  flex-shrink:0;
+}
+.seo-item[open] summary::after{ content: "−"; }
+.seo-body{ padding: 0 20px 20px; font-size: 14px; color: var(--color-text); }
+.seo-body p{ margin: 0 0 12px; }
+.seo-body ul{ margin: 0 0 12px; padding-left: 20px; }
+.seo-body li{ margin-bottom: 6px; }
+
+/* ============================================================
+   6. フッター・候補FAB・ドロワー
+   ============================================================ */
+.site-footer{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align:center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.candidate-fab{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  background: var(--color-primary-dark);
+  color:#fff;
+  border:none;
+  border-radius: var(--radius-pill);
+  padding: 14px 20px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  cursor:pointer;
+}
+
+.drawer-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  display:flex;
+  justify-content:flex-end;
+}
+.drawer-overlay.hidden{ display:none; }
+.drawer-panel{
+  width: min(480px, 100%);
+  background: var(--color-bg);
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+}
+.drawer-header{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom: 14px;
+}
+.drawer-header h2{ font-family: var(--font-display); font-size: 18px; margin:0; color: var(--color-primary-dark); }
+.drawer-close{
+  border:none; background:none; font-size: 20px; cursor:pointer; color: var(--color-text-muted);
+}
+.drawer-tabs{ display:flex; gap: 6px; margin-bottom: 14px; }
+.drawer-tab{
+  flex:1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border);
+  background:#fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor:pointer;
+  color: var(--color-text-muted);
+}
+.drawer-tab.active{ background: var(--color-primary); border-color: var(--color-primary); color:#fff; }
+.drawer-view{ display:none; }
+.drawer-view.active{ display:block; }
+.drawer-actions-row{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.sort-row{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.sort-row select{
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.candidate-row{
+  background: var(--color-surface);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.cand-name{ font-weight: 700; margin-bottom: 4px; }
+.cand-address{ font-size: 13px; color: var(--color-text-muted); margin-bottom: 6px; }
+.cand-lastcall{ font-size: 12px; color: var(--color-primary-dark); font-weight:700; margin-bottom: 8px; }
+.client-label-input, .memo-input{
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.status-btns{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 8px; }
+.status-btn{
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  background:#fff;
+  font-size: 12px;
+  cursor:pointer;
+}
+.status-btn.active-available{ background:#E5F3EA; border-color:#7FBE93; }
+.status-btn.active-maybe{ background:#FDF3D9; border-color:#E8C15C; }
+.status-btn.active-full{ background:#FBE7E5; border-color:#E0958E; }
+.status-btn.active-unknown{ background:#F1EFE7; border-color:#C9C4B6; }
+.candidate-row-actions{ display:flex; flex-wrap: wrap; gap: 6px; }
+.mini-btn{
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  background:#fff;
+  font-size: 12px;
+  font-weight:700;
+  text-decoration:none;
+  color: var(--color-text);
+  cursor:pointer;
+}
+.mini-btn.referred{ background: var(--color-primary); border-color: var(--color-primary); color:#fff; }
+.mini-btn.danger{ background:#fff; color:#B0413E; border-color:#E0958E; }
+.mini-btn.copy{ background: var(--color-accent); border-color: var(--color-accent); color:#fff; }
+
+.compare-table-wrap{ overflow-x:auto; }
+.compare-table{ border-collapse: collapse; width: 100%; font-size: 12px; }
+.compare-table th, .compare-table td{
+  border: 1px solid var(--color-border);
+  padding: 8px 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+.compare-table th{ background: var(--color-bg); }
+.compare-label{ text-align:left; font-weight:700; }
+
+.history-row{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 8px;
+  background: var(--color-surface);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+#printArea{ display:none; }
+@media print{
+  body > *:not(#printArea){ display:none !important; }
+  #printArea{ display:block !important; }
+}
+
+@media (max-width: 480px){
+  .drawer-panel{ width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     ヘッダー・免責バナー
+     ============================================================ -->
+<header class="site-header">
+  <h1>ヘルパー事業所ナビ</h1>
+  <p class="tagline">訪問介護・居宅介護のヘルパー事業所を、電話・比較・紹介まで一画面で</p>
+  <p class="concept">相談員の仕事は「検索すること」ではなく「利用者さんに最適な事業所を紹介すること」。探す時間を減らし、利用者さんと向き合う時間を増やすためのツールです。</p>
+
+  <div class="disclaimer-banner">
+    <strong>ご利用にあたって：</strong>
+    本サイトは、厚生労働省「介護サービス情報公表システム」（訪問介護）およびWAM NET「障害福祉サービス等情報公表システム」（居宅介護）のオープンデータをもとに作成しています。
+    生活保護対応等の一部情報はAIによる調査（要確認）です。ご利用の際は必ず電話や公式サイトでご確認ください。
+    <div id="specialtyNotice"></div>
+  </div>
+</header>
+
+<!-- ============================================================
+     検索エリア
+     ============================================================ -->
+<div class="search-panel">
+  <div class="locate-row">
+    <button id="btnLocate" class="btn btn-primary">📍 現在地から探す</button>
+    <span id="locateStatus"></span>
+  </div>
+
+  <div class="field-row">
+    <select id="prefSelect">
+      <option value="">都道府県を選ぶ</option>
+    </select>
+    <input type="text" id="keywordInput" placeholder="事業所名・住所で検索">
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-label">サービス区分</div>
+    <div class="chip-list" id="serviceTypeFilters">
+      <label class="chip"><input type="checkbox" value="care_insurance_homehelp">介護保険：訪問介護</label>
+      <label class="chip"><input type="checkbox" value="disability_kyotaku">障害福祉：居宅介護</label>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-label">対応曜日</div>
+    <div class="chip-list" id="dayFilters">
+      <label class="chip"><input type="checkbox" value="saturday">土曜対応</label>
+      <label class="chip"><input type="checkbox" value="sunday">日曜対応</label>
+      <label class="chip"><input type="checkbox" value="holiday">祝日対応</label>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-label">その他の条件</div>
+    <div class="chip-list">
+      <label class="chip"><input type="checkbox" id="earlyLateFilter">早朝・夜間対応</label>
+      <label class="chip"><input type="checkbox" id="seikatsuhogoFilter">生活保護対応（AI調査済みのみ）</label>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     結果エリア
+     ============================================================ -->
+<div class="results-wrap">
+  <div class="results-meta">
+    <span id="resultsCount">現在地を取得するか、都道府県を選んでください。</span>
+    <span id="sortMode"></span>
+  </div>
+  <div id="resultsList"></div>
+  <div class="load-more-wrap">
+    <button id="btnLoadMore" class="btn btn-outline" style="display:none;">もっと見る</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     🚧 AdSense（コメントアウト中。有効化の際はコメントを外してください）
+     ============================================================
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2908004621823900"
+     data-ad-slot="5820083954"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+============================================================ -->
+
+<!-- ============================================================
+     SEOアコーディオンセクション
+     ============================================================ -->
+<section class="seo-section">
+  <h2>ヘルパー事業所お役立ちガイド</h2>
+
+  <details class="seo-item">
+    <summary>訪問介護とは？<br>ホームヘルパーが自宅で行う支援</summary>
+    <div class="seo-body">
+      <p>
+        訪問介護は、介護保険制度にもとづき、ホームヘルパー（訪問介護員）が利用者の自宅を訪問して、身体介護や生活援助を行うサービスです。
+        入浴・排泄・食事などの介助（身体介護）と、調理・掃除・洗濯などの生活の支援（生活援助）の2つを中心に、通院時の乗り降りの介助なども行われます。
+      </p>
+      <p><strong>利用できる方</strong></p>
+      <p>
+        原則として、要介護認定（要介護1〜5）を受けた65歳以上の方、または特定疾病により要介護認定を受けた40〜64歳の方が対象です。
+        要支援の方は、内容が異なる「介護予防訪問介護」に相当するサービス（総合事業）を利用する場合があります。
+      </p>
+      <p><strong>利用開始までの流れ</strong></p>
+      <p>
+        ケアマネジャーが作成するケアプランに基づいて、訪問介護事業所と契約を結び、サービスが開始されます。
+        事業所ごとに訪問エリア・対応曜日・空き状況が異なるため、複数の候補を比較して検討することが大切です。
+      </p>
+    </div>
+  </details>
+
+  <details class="seo-item">
+    <summary>障害福祉サービスの「居宅介護」とは？<br>訪問介護との違い</summary>
+    <div class="seo-body">
+      <p>
+        居宅介護は、障害者総合支援法にもとづく障害福祉サービスのひとつで、ヘルパーが自宅を訪問して、身体介護・家事援助・通院等介助などを行う点は訪問介護とよく似ています。
+        大きな違いは、根拠となる制度と対象者です。訪問介護は「介護保険」にもとづき主に高齢の方を対象とするのに対し、居宅介護は「障害福祉サービス」にもとづき、障害支援区分の認定を受けた障害のある方（子どもを含む）を対象とします。
+      </p>
+      <p><strong>利用できる方</strong></p>
+      <p>
+        市区町村による障害支援区分の認定（区分1以上）を受けている方が対象です。18歳未満の障害児も、児童福祉法にもとづく手続きを経て利用できる場合があります。
+      </p>
+      <p><strong>事業所を探すときの注意点</strong></p>
+      <p>
+        訪問介護と居宅介護は指定基準・事業所番号が別々に管理されているため、同じ事業所であっても「訪問介護の指定」と「居宅介護の指定」を両方受けている場合と、片方しか受けていない場合があります。
+        本サイトでは、事業所ごとに「介護保険：訪問介護」「障害福祉：居宅介護」のバッジを表示し、どちらの制度で申込みができるかが一目でわかるようにしています。
+      </p>
+    </div>
+  </details>
+
+  <details class="seo-item">
+    <summary>65歳になったらどうなる？<br>介護保険と障害福祉サービスの関係</summary>
+    <div class="seo-body">
+      <p>
+        障害のある方が65歳（特定疾病の場合は40歳）に達すると、原則として介護保険サービスが障害福祉サービスに優先して適用される「介護保険優先の原則」があります。
+        そのため、それまで居宅介護を利用していた方が、65歳を境に訪問介護へ切り替わるケースが多くあります。
+      </p>
+      <p><strong>知っておきたいポイント</strong></p>
+      <ul>
+        <li>介護保険サービスにない支援内容（重度訪問介護の見守り等）や、支給量が介護保険で足りない場合は、市区町村の判断で障害福祉サービスの上乗せ・横出し利用が認められることがあります。</li>
+        <li>切り替えの際は、慣れた事業所が訪問介護の指定も受けているかどうかを早めに確認しておくと、利用者の環境変化を最小限にできます。</li>
+        <li>制度の適用関係は個々の状況により異なるため、詳細は市区町村の窓口や相談支援専門員・ケアマネジャーにご確認ください。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="seo-item">
+    <summary>生活保護を受けている方が、<br>訪問介護・居宅介護を利用する場合</summary>
+    <div class="seo-body">
+      <p>
+        生活保護を受けている方が訪問介護・居宅介護を利用する場合、自己負担分は「介護扶助」または「障害福祉サービス費」の公費負担により軽減・免除されるのが一般的です。
+        ただし、事業所によっては生活保護受給者の受け入れ実績が少なかったり、事務手続き（代理受領方式の申請等）に不慣れな場合もあります。
+      </p>
+      <p><strong>相談員として確認しておきたいこと</strong></p>
+      <ul>
+        <li>担当のケースワーカー（福祉事務所）との事前調整が必要か</li>
+        <li>事業所側が生活保護受給者の代理受領方式に対応済みか</li>
+        <li>自立支援医療（精神通院医療）など、他の公費負担制度との併用状況</li>
+      </ul>
+      <p>
+        本サイトでは、AIによるホームページ調査にもとづく「生活保護対応」の参考情報を掲載していますが、正確性を保証するものではありません。必ず事業所へ直接ご確認ください。
+      </p>
+    </div>
+  </details>
+
+  <details class="seo-item">
+    <summary>ヘルパー事業所の選び方<br>失敗しないためのポイント</summary>
+    <div class="seo-body">
+      <p>
+        訪問介護・居宅介護の事業所は数多くあり、対応エリアや得意分野、空き状況もさまざまです。以下のポイントを押さえておくと、利用者に合った事業所を見つけやすくなります。
+      </p>
+      <ul>
+        <li><strong>訪問エリア・距離</strong>：自宅から近くても、訪問エリア外だと対応してもらえないことがあります。事前確認が重要です。</li>
+        <li><strong>対応可能な制度</strong>：介護保険（訪問介護）と障害福祉（居宅介護）のどちらに対応しているか。</li>
+        <li><strong>曜日・時間帯の対応幅</strong>：平日のみか、土日・祝日、早朝・夜間も対応しているか。</li>
+        <li><strong>スタッフの状況</strong>：男性・女性ヘルパーの在籍状況など、利用者の希望に沿えるか（電話での確認が確実です）。</li>
+        <li><strong>複数の候補を比較すること</strong>：1か所だけで決めず、2〜3か所を比較検討することで、より納得のいく選択がしやすくなります。</li>
+      </ul>
+      <p>
+        本サイトの「候補に追加」「比較」機能を使うと、複数の候補を並べて条件を見比べることができますので、あわせてご活用ください。
+      </p>
+    </div>
+  </details>
+
+  <details class="seo-item">
+    <summary>【相談員向け】<br>紹介前に確認したいチェックリスト</summary>
+    <div class="seo-body">
+      <p>
+        候補のヘルパー事業所へ連絡する前に、以下の項目を整理しておくと、電話での確認がスムーズになり、事業所側とのミスマッチも減らせます。
+      </p>
+      <p><strong>①制度面の確認</strong></p>
+      <ul>
+        <li>介護保険（訪問介護）・障害福祉（居宅介護）のどちらが適用されるか</li>
+        <li>ケアプラン／サービス等利用計画は作成済みか</li>
+        <li>生活保護・自立支援医療など、他の公費負担制度の有無</li>
+      </ul>
+      <p><strong>②利用者本人の状態</strong></p>
+      <ul>
+        <li>希望する支援内容（身体介護・生活援助・通院介助等）</li>
+        <li>男性・女性ヘルパーの希望</li>
+        <li>緊急時対応が必要な状態かどうか</li>
+      </ul>
+      <p><strong>③事業所側への確認事項</strong></p>
+      <ul>
+        <li>訪問エリア内かどうか、対応可能な曜日・時間帯</li>
+        <li>現在の空き状況、受け入れまでの目安期間</li>
+        <li>FAXでのフェースシート送付が必要か</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<footer class="site-footer">
+  <p id="footerManifestInfo">データ読み込み中…</p>
+  <p>
+    データ出典：厚生労働省「介護サービス情報公表システム」（訪問介護）オープンデータ／WAM NET「障害福祉サービス等情報公表システム」（居宅介護）オープンデータ<br>
+    生活保護対応：AIによるホームページ調査（要確認）
+  </p>
+</footer>
+
+<!-- ============================================================
+     候補リストFAB・ドロワー
+     ============================================================ -->
+<button id="candidateFab" class="candidate-fab">📋 候補リスト（<span id="fabCount">0</span>）</button>
+
+<div id="drawerOverlay" class="drawer-overlay hidden">
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <h2>候補リスト・比較・紹介履歴</h2>
+      <button id="drawerClose" class="drawer-close">✕</button>
+    </div>
+
+    <div class="drawer-tabs">
+      <button class="drawer-tab active" data-tab="list">候補リスト</button>
+      <button class="drawer-tab" data-tab="compare">比較</button>
+      <button class="drawer-tab" data-tab="history">紹介履歴</button>
+    </div>
+
+    <div class="drawer-actions-row">
+      <button id="btnPrint" class="btn btn-outline">🖨 このリストを印刷する</button>
+      <button id="btnCopyRecord" class="mini-btn copy">📋 記録用にテキストをコピー</button>
+    </div>
+
+    <div id="viewList" class="drawer-view active">
+      <div class="sort-row">
+        並び替え：
+        <select id="candidateSortSelect">
+          <option value="added">追加順</option>
+          <option value="name">名前順</option>
+          <option value="unconfirmed_first">未確認を先に</option>
+        </select>
+      </div>
+      <div id="candidateListBody"></div>
+    </div>
+    <div id="viewCompare" class="drawer-view"></div>
+    <div id="viewHistory" class="drawer-view"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     印刷専用エリア
+     ============================================================ -->
+<div id="printArea"></div>
+
+<!-- ============================================================
+     スクリプト本体
+     ============================================================ -->
+<script>
+(function(){
+
+  // ------------------------------------------------------------
+  // 1. 設定
+  // ------------------------------------------------------------
+  const PAGE_SIZE = 20;
+  const NEARBY_PREFECTURE_COUNT = 5;
+
+  const SERVICE_TYPE_LABELS = {
+    care_insurance_homehelp: "介護保険：訪問介護",
+    disability_kyotaku: "障害福祉：居宅介護",
+  };
+
+  const PREFECTURE_CENTROIDS = {
+    hokkaido: [43.06, 141.35], aomori: [40.82, 140.74], iwate: [39.70, 141.15],
+    miyagi: [38.27, 140.87], akita: [39.72, 140.10], yamagata: [38.24, 140.36],
+    fukushima: [37.75, 140.47], ibaraki: [36.34, 140.45], tochigi: [36.57, 139.88],
+    gunma: [36.39, 139.06], saitama: [35.86, 139.65], chiba: [35.60, 140.12],
+    tokyo: [35.69, 139.69], kanagawa: [35.45, 139.64], niigata: [37.90, 139.02],
+    toyama: [36.70, 137.21], ishikawa: [36.59, 136.63], fukui: [36.07, 136.22],
+    yamanashi: [35.66, 138.57], nagano: [36.65, 138.18], gifu: [35.39, 136.72],
+    shizuoka: [34.98, 138.38], aichi: [35.18, 136.91], mie: [34.73, 136.51],
+    shiga: [35.00, 135.87], kyoto: [35.02, 135.76], osaka: [34.69, 135.52],
+    hyogo: [34.69, 135.18], nara: [34.69, 135.83], wakayama: [34.23, 135.17],
+    tottori: [35.50, 134.24], shimane: [35.47, 133.05], okayama: [34.66, 133.93],
+    hiroshima: [34.40, 132.46], yamaguchi: [34.19, 131.47], tokushima: [34.07, 134.56],
+    kagawa: [34.34, 134.04], ehime: [33.84, 132.77], kochi: [33.56, 133.53],
+    fukuoka: [33.61, 130.42], saga: [33.25, 130.30], nagasaki: [32.74, 129.87],
+    kumamoto: [32.79, 130.74], oita: [33.24, 131.61], miyazaki: [31.91, 131.42],
+    kagoshima: [31.56, 130.56], okinawa: [26.21, 127.68],
+  };
+
+  const PREFECTURE_LABELS = {
+    hokkaido:"北海道", aomori:"青森県", iwate:"岩手県", miyagi:"宮城県", akita:"秋田県",
+    yamagata:"山形県", fukushima:"福島県", ibaraki:"茨城県", tochigi:"栃木県", gunma:"群馬県",
+    saitama:"埼玉県", chiba:"千葉県", tokyo:"東京都", kanagawa:"神奈川県", niigata:"新潟県",
+    toyama:"富山県", ishikawa:"石川県", fukui:"福井県", yamanashi:"山梨県", nagano:"長野県",
+    gifu:"岐阜県", shizuoka:"静岡県", aichi:"愛知県", mie:"三重県", shiga:"滋賀県",
+    kyoto:"京都府", osaka:"大阪府", hyogo:"兵庫県", nara:"奈良県", wakayama:"和歌山県",
+    tottori:"鳥取県", shimane:"島根県", okayama:"岡山県", hiroshima:"広島県", yamaguchi:"山口県",
+    tokushima:"徳島県", kagawa:"香川県", ehime:"愛媛県", kochi:"高知県", fukuoka:"福岡県",
+    saga:"佐賀県", nagasaki:"長崎県", kumamoto:"熊本県", oita:"大分県", miyazaki:"宮崎県",
+    kagoshima:"鹿児島県", okinawa:"沖縄県",
+  };
+
+  // 都道府県セレクトを組み立て（PREFECTURE_LABELSの並び順で追加）
+  (function populatePrefSelect(){
+    const sel = document.getElementById("prefSelect");
+    Object.entries(PREFECTURE_LABELS).forEach(([slug, name]) => {
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    });
+  })();
+
+  // ------------------------------------------------------------
+  // 2. 状態管理
+  // ------------------------------------------------------------
+  let allStations = [];
+  let userLocation = null;
+  let filteredSorted = [];
+  let renderedCount = 0;
+  let manifestData = null;
+  const prefectureDataCache = {};
+
+  // ------------------------------------------------------------
+  // 3. データ読み込み（都道府県ごとの遅延読み込み方式）
+  // ------------------------------------------------------------
+  async function loadManifest(){
+    try{
+      const res = await fetch("data_manifest.json");
+      manifestData = await res.json();
+
+      document.getElementById("footerManifestInfo").textContent =
+        `訪問介護：${manifestData.kaigo_csv_source}／居宅介護：${manifestData.shogai_csv_source}／全国${manifestData.total_count}件を掲載`;
+
+      renderSpecialtyNotice();
+    }catch(err){
+      console.error(err);
+      document.getElementById("resultsList").innerHTML =
+        `<div class="empty-state">データの読み込みに失敗しました。時間をおいて再度お試しください。</div>`;
+    }
+  }
+
+  function renderSpecialtyNotice(){
+    const el = document.getElementById("specialtyNotice");
+    if (!el) return;
+    if (!manifestData || !manifestData.specialty_researched_prefectures || manifestData.specialty_researched_prefectures.length === 0){
+      el.textContent = "※生活保護対応の調査は現在準備中です。順次エリアを拡大予定です。";
+      return;
+    }
+    const names = manifestData.specialty_researched_prefectures
+      .map(slug => PREFECTURE_LABELS[slug] || slug).join("・");
+    el.textContent = `※「生活保護対応」の情報は、現在${names}のみ調査済みです。それ以外の地域は基本情報のみの表示となります。`;
+  }
+
+  async function loadPrefectureData(slug){
+    if (prefectureDataCache[slug]) return prefectureDataCache[slug];
+    const res = await fetch(`data_${slug}.json`);
+    const data = await res.json();
+    prefectureDataCache[slug] = data;
+    return data;
+  }
+
+  function findNearestPrefectureSlugs(loc, count){
+    const distances = Object.entries(PREFECTURE_CENTROIDS).map(([slug, [lat, lon]]) => ({
+      slug, dist: haversineKm(loc.lat, loc.lon, lat, lon)
+    }));
+    distances.sort((a, b) => a.dist - b.dist);
+    return distances.slice(0, count).map(d => d.slug);
+  }
+
+  // ------------------------------------------------------------
+  // 4. 距離計算（Haversine公式）
+  // ------------------------------------------------------------
+  function haversineKm(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  // ------------------------------------------------------------
+  // 5. 現在地取得
+  // ------------------------------------------------------------
+  document.getElementById("btnLocate").addEventListener("click", () => {
+    const statusEl = document.getElementById("locateStatus");
+
+    if (!navigator.geolocation){
+      statusEl.textContent = "お使いの環境では現在地取得に対応していません。都道府県を選んでください。";
+      return;
+    }
+
+    statusEl.textContent = "現在地を取得しています…";
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        statusEl.textContent = "近くのデータを読み込んでいます…";
+        document.getElementById("prefSelect").value = "";
+
+        const nearestSlugs = findNearestPrefectureSlugs(userLocation, NEARBY_PREFECTURE_COUNT);
+        try{
+          const dataSets = await Promise.all(nearestSlugs.map(loadPrefectureData));
+          allStations = dataSets.flat();
+          statusEl.textContent = "現在地を取得しました。近い順に表示します。";
+          applyFiltersAndRender();
+        }catch(e){
+          console.error(e);
+          statusEl.textContent = "データの読み込みに失敗しました。時間をおいて再度お試しください。";
+        }
+      },
+      (err) => {
+        console.warn(err);
+        userLocation = null;
+        statusEl.textContent = "現在地を取得できませんでした。都道府県を選んで検索してください。";
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  });
+
+  // ------------------------------------------------------------
+  // 6. フィルター・検索条件の変更を監視
+  // ------------------------------------------------------------
+  document.getElementById("prefSelect").addEventListener("change", async () => {
+    const slug = document.getElementById("prefSelect").value;
+    userLocation = null;
+    document.getElementById("locateStatus").textContent = "";
+
+    if (!slug){
+      allStations = [];
+      document.getElementById("resultsList").innerHTML = "";
+      document.getElementById("resultsCount").textContent = "都道府県を選ぶか、現在地から探してください。";
+      return;
+    }
+
+    document.getElementById("resultsCount").textContent = "データを読み込んでいます…";
+    try{
+      allStations = await loadPrefectureData(slug);
+      applyFiltersAndRender();
+    }catch(e){
+      console.error(e);
+      document.getElementById("resultsList").innerHTML =
+        `<div class="empty-state">データの読み込みに失敗しました。時間をおいて再度お試しください。</div>`;
+    }
+  });
+
+  document.getElementById("keywordInput").addEventListener("input", debounce(applyFiltersAndRender, 250));
+  document.querySelectorAll('#serviceTypeFilters input, #dayFilters input, #earlyLateFilter, #seikatsuhogoFilter')
+    .forEach(el => el.addEventListener("change", (e) => {
+      const chip = e.target.closest(".chip");
+      if (chip) chip.classList.toggle("checked", e.target.checked);
+      applyFiltersAndRender();
+    }));
+
+  function debounce(fn, delay){
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  // ------------------------------------------------------------
+  // 7. フィルタリング・ソート・描画
+  // ------------------------------------------------------------
+  function applyFiltersAndRender(){
+    if (allStations.length === 0) return;
+
+    const keyword = document.getElementById("keywordInput").value.trim();
+    const checkedServiceTypes = Array.from(document.querySelectorAll('#serviceTypeFilters input:checked')).map(i => i.value);
+    const checkedDays = Array.from(document.querySelectorAll('#dayFilters input:checked')).map(i => i.value);
+    const earlyLateOnly = document.getElementById("earlyLateFilter").checked;
+    const seikatsuhogoOnly = document.getElementById("seikatsuhogoFilter").checked;
+
+    let list = allStations;
+
+    if (keyword){
+      list = list.filter(s =>
+        (s.name && s.name.includes(keyword)) ||
+        (s.address && s.address.includes(keyword)) ||
+        (s.city && s.city.includes(keyword))
+      );
+    }
+
+    if (checkedServiceTypes.length > 0){
+      list = list.filter(s => checkedServiceTypes.includes(s.service_type));
+    }
+
+    if (checkedDays.length > 0){
+      list = list.filter(s => checkedDays.every(day => s.available_days && s.available_days[day]));
+    }
+
+    if (earlyLateOnly){
+      list = list.filter(s => s.early_late_hint);
+    }
+
+    if (seikatsuhogoOnly){
+      list = list.filter(s => s.specialty_tags && (s.specialty_tags.seikatsu_hogo === "specialized" || s.specialty_tags.seikatsu_hogo === "mentioned"));
+    }
+
+    if (userLocation){
+      list = list.map(s => ({
+        ...s,
+        _distance: (s.lat && s.lon) ? haversineKm(userLocation.lat, userLocation.lon, s.lat, s.lon) : null
+      }));
+      list.sort((a, b) => {
+        if (a._distance === null && b._distance === null) return 0;
+        if (a._distance === null) return 1;
+        if (b._distance === null) return -1;
+        return a._distance - b._distance;
+      });
+      document.getElementById("sortMode").textContent = "現在地から近い順に表示中";
+    } else {
+      document.getElementById("sortMode").textContent = "";
+    }
+
+    filteredSorted = list;
+    renderedCount = 0;
+    document.getElementById("resultsList").innerHTML = "";
+    document.getElementById("resultsCount").textContent = `${filteredSorted.length}件が該当しました`;
+    renderNextPage();
+  }
+
+  // ------------------------------------------------------------
+  // 8. カードの描画（ページング対応）
+  // ------------------------------------------------------------
+  function renderNextPage(){
+    const listEl = document.getElementById("resultsList");
+    const next = filteredSorted.slice(renderedCount, renderedCount + PAGE_SIZE);
+
+    if (renderedCount === 0 && next.length === 0){
+      listEl.innerHTML = `<div class="empty-state">条件に合う事業所が見つかりませんでした。条件を変えてお試しください。</div>`;
+    }
+
+    next.forEach(station => listEl.insertAdjacentHTML("beforeend", renderCard(station)));
+    renderedCount += next.length;
+
+    const moreBtn = document.getElementById("btnLoadMore");
+    moreBtn.style.display = (renderedCount < filteredSorted.length) ? "inline-block" : "none";
+  }
+  document.getElementById("btnLoadMore").addEventListener("click", renderNextPage);
+
+  function renderCard(s){
+    const svcBadge = `<span class="tag-badge svc-${s.service_type}">${SERVICE_TYPE_LABELS[s.service_type] || s.service_type}</span>`;
+
+    const disabilityHintBadge = (s.service_type === "care_insurance_homehelp" && s.disability_welfare_hint)
+      ? `<span class="tag-badge disability-ok">障害福祉にも対応の可能性あり</span>` : "";
+
+    const earlyLateBadge = s.early_late_hint
+      ? `<span class="tag-badge hint">🌙 早朝・夜間対応の記載あり</span>` : "";
+
+    let seikatsuBadge = "";
+    const shStatus = s.specialty_tags && s.specialty_tags.seikatsu_hogo;
+    if (shStatus === "specialized" || shStatus === "mentioned"){
+      const label = "生活保護対応" + (shStatus === "mentioned" ? "（言及あり）" : "");
+      seikatsuBadge = `<span class="tag-badge seikatsuhogo">${escapeHtml(label)}</span>`;
+    }
+
+    const distanceHtml = (s._distance !== undefined && s._distance !== null)
+      ? `<span class="card-distance">📍 約${s._distance.toFixed(1)}km</span>` : "";
+
+    const days = s.available_days || {};
+    const dayBadges = [
+      ["平日","weekday"], ["土","saturday"], ["日","sunday"], ["祝","holiday"]
+    ].map(([label,key]) => `<span class="day-badge ${days[key] ? "active" : ""}">${label}</span>`).join("");
+
+    const mapUrl = buildMapUrl(s);
+    const telHtml = s.tel_clean
+      ? `<a class="action-btn call" href="tel:${s.tel_clean}">📞 ${escapeHtml(s.tel)}</a>`
+      : "";
+    const faxHtml = s.fax
+      ? `<span class="action-btn fax">📠 FAX: ${escapeHtml(s.fax)}</span>`
+      : "";
+    const urlHtml = s.url
+      ? `<a class="action-btn" href="${escapeAttr(s.url)}" target="_blank" rel="noopener">🌐 ホームページ</a>`
+      : "";
+    const remarksHtml = s.remarks
+      ? `<div class="card-remarks">📝 特記事項：${escapeHtml(s.remarks)}</div>` : "";
+
+    const isAdded = candidates.some(c => c.jigyosho_no === s.jigyosho_no && c.service_type === s.service_type);
+    const candidateBtnHtml =
+      `<button class="action-btn candidate${isAdded ? " added" : ""}" data-jigyosho-no="${escapeAttr(s.jigyosho_no)}" data-service-type="${escapeAttr(s.service_type)}" onclick="window.__helperNavi.toggleCandidate('${escapeAttr(s.jigyosho_no)}','${escapeAttr(s.service_type)}')">
+        ${isAdded ? "✓ 候補に追加済み" : "📋 候補に追加"}
+      </button>`;
+
+    return `
+      <div class="station-card svc-${s.service_type}">
+        <div class="card-top">
+          <h3 class="card-name">${escapeHtml(s.name)}</h3>
+          ${distanceHtml}
+        </div>
+        <div class="tag-badges">${svcBadge}${disabilityHintBadge}${seikatsuBadge}${earlyLateBadge}</div>
+        <div class="card-address">📍 ${escapeHtml(s.address)}</div>
+        <div class="day-badges">${dayBadges}</div>
+        <div class="card-actions">
+          ${telHtml}
+          ${faxHtml}
+          <a class="action-btn map" href="${mapUrl}" target="_blank" rel="noopener">🗺 ルート案内</a>
+          ${urlHtml}
+          ${candidateBtnHtml}
+        </div>
+        ${remarksHtml}
+        <div class="source-label official">🟢 公式情報（事業所名・住所・電話・サービス区分等）</div>
+        ${seikatsuBadge ? `<div class="source-label ai">🟡 AI調査（生活保護対応・要確認）</div>` : ""}
+      </div>
+    `;
+  }
+
+  function buildMapUrl(s){
+    const destination = encodeURIComponent(s.address || s.name);
+    let url = `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+    if (userLocation){
+      url += `&origin=${userLocation.lat},${userLocation.lon}`;
+    }
+    return url;
+  }
+
+  function escapeHtml(str){
+    if (!str) return "";
+    return String(str).replace(/[&<>"']/g, (c) => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+  function escapeAttr(str){ return escapeHtml(str); }
+
+  // ------------------------------------------------------------
+  // 9. 初期化
+  // ------------------------------------------------------------
+  loadManifest();
+
+  // ============================================================
+  // 10. 候補リスト・電話ステータス・最終電話日・フリーメモ・
+  //     比較・紹介履歴・印刷・記録用一括コピー
+  //     全てlocalStorageのみで完結し、サーバーへは一切送信しない。
+  // ============================================================
+  const CANDIDATES_KEY = "helpernavi_candidates";
+  const HISTORY_KEY = "helpernavi_referral_history";
+  const SORT_KEY = "helpernavi_candidate_sort";
+
+  const STATUS_LABELS = {
+    unknown: "⚪ 未確認",
+    available: "🟢 空きあり",
+    maybe: "🟡 応相談",
+    full: "🔴 満床",
+  };
+
+  function loadFromStorage(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){
+      console.warn(`localStorageの読み込みに失敗しました（${key}）`, e);
+      return fallback;
+    }
+  }
+  function saveToStorage(key, value){
+    try{
+      localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){
+      console.warn(`localStorageの保存に失敗しました（${key}）`, e);
+    }
+  }
+
+  let candidates = loadFromStorage(CANDIDATES_KEY, []);
+  let referralHistory = loadFromStorage(HISTORY_KEY, []);
+  let candidateSortMode = loadFromStorage(SORT_KEY, "added");
+
+  function saveCandidates(){ saveToStorage(CANDIDATES_KEY, candidates); }
+  function saveHistory(){ saveToStorage(HISTORY_KEY, referralHistory); }
+
+  function candidateKey(jigyoshoNo, serviceType){ return `${serviceType}:${jigyoshoNo}`; }
+
+  function toggleCandidate(jigyoshoNo, serviceType){
+    const idx = candidates.findIndex(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+    if (idx >= 0){
+      candidates.splice(idx, 1);
+    } else {
+      const station = allStations.find(s => s.jigyosho_no === jigyoshoNo && s.service_type === serviceType);
+      if (!station) return;
+      candidates.push({
+        jigyosho_no: station.jigyosho_no,
+        service_type: station.service_type,
+        service_type_label: SERVICE_TYPE_LABELS[station.service_type] || station.service_type,
+        name: station.name,
+        address: station.address,
+        tel: station.tel,
+        tel_clean: station.tel_clean,
+        fax: station.fax,
+        url: station.url,
+        specialty_tags: station.specialty_tags,
+        available_days: station.available_days,
+        early_late_hint: station.early_late_hint,
+        status: "unknown",
+        lastCalledAt: null,
+        clientLabel: "",
+        memo: "",
+        addedAt: new Date().toISOString(),
+      });
+    }
+    saveCandidates();
+    updateFabCount();
+    refreshCandidateButtons();
+    renderDrawerViews();
+  }
+
+  function refreshCandidateButtons(){
+    document.querySelectorAll(".action-btn.candidate").forEach(btn => {
+      const no = btn.getAttribute("data-jigyosho-no");
+      const svc = btn.getAttribute("data-service-type");
+      const added = candidates.some(c => c.jigyosho_no === no && c.service_type === svc);
+      btn.classList.toggle("added", added);
+      btn.textContent = added ? "✓ 候補に追加済み" : "📋 候補に追加";
+    });
+  }
+
+  function removeCandidate(jigyoshoNo, serviceType){
+    candidates = candidates.filter(c => !(c.jigyosho_no === jigyoshoNo && c.service_type === serviceType));
+    saveCandidates();
+    updateFabCount();
+    refreshCandidateButtons();
+    renderDrawerViews();
+  }
+
+  function todayLabel(){
+    return new Date().toLocaleDateString("ja-JP");
+  }
+
+  // 👑 最終電話日：ステータスを変更するたびに「今日」を自動記録する。
+  //    相談員の「電話したっけ？」を即座に解消するための機能。
+  function setCandidateStatus(jigyoshoNo, serviceType, status){
+    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+    if (c){
+      c.status = status;
+      c.lastCalledAt = todayLabel();
+      saveCandidates();
+      renderDrawerViews();
+    }
+  }
+
+  function setCandidateClientLabel(jigyoshoNo, serviceType, label){
+    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+    if (c){
+      c.clientLabel = label;
+      saveCandidates();
+    }
+  }
+
+  // 👑 フリーメモ欄：「男性ヘルパーのみ空きあり」等、電話で聞いた内容を記録
+  function setCandidateMemo(jigyoshoNo, serviceType, memo){
+    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+    if (c){
+      c.memo = memo;
+      saveCandidates();
+    }
+  }
+
+  function markAsReferred(jigyoshoNo, serviceType){
+    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+    if (!c) return;
+    const clientLabel = window.prompt("どなたの候補として紹介しましたか？（任意・例：Aさん）", c.clientLabel || "") || "";
+    referralHistory.unshift({
+      jigyosho_no: c.jigyosho_no,
+      service_type_label: c.service_type_label,
+      name: c.name,
+      clientLabel,
+      referredAt: new Date().toLocaleString("ja-JP"),
+    });
+    saveHistory();
+    renderDrawerViews();
+  }
+
+  function removeHistoryEntry(index){
+    referralHistory.splice(index, 1);
+    saveHistory();
+    renderDrawerViews();
+  }
+
+  function updateFabCount(){
+    document.getElementById("fabCount").textContent = candidates.length;
+  }
+
+  const drawerOverlay = document.getElementById("drawerOverlay");
+  document.getElementById("candidateFab").addEventListener("click", () => {
+    drawerOverlay.classList.remove("hidden");
+    renderDrawerViews();
+  });
+  document.getElementById("drawerClose").addEventListener("click", () => {
+    drawerOverlay.classList.add("hidden");
+  });
+  drawerOverlay.addEventListener("click", (e) => {
+    if (e.target === drawerOverlay) drawerOverlay.classList.add("hidden");
+  });
+
+  document.querySelectorAll(".drawer-tab").forEach(tabBtn => {
+    tabBtn.addEventListener("click", () => {
+      document.querySelectorAll(".drawer-tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".drawer-view").forEach(v => v.classList.remove("active"));
+      tabBtn.classList.add("active");
+      const tabName = tabBtn.getAttribute("data-tab");
+      document.getElementById(`view${tabName.charAt(0).toUpperCase()}${tabName.slice(1)}`).classList.add("active");
+    });
+  });
+
+  // 👑 並び替え：フィルタではなく「候補リストの表示順」だけを変える軽量機能。
+  //    電話済みの事業所を下へ送り、未確認だけを上に残すことで、
+  //    かけ忘れを防ぐ実務的な使い方を想定。
+  document.getElementById("candidateSortSelect").addEventListener("change", (e) => {
+    candidateSortMode = e.target.value;
+    saveToStorage(SORT_KEY, candidateSortMode);
+    renderCandidateListView();
+  });
+
+  function sortedCandidates(){
+    const list = [...candidates];
+    if (candidateSortMode === "name"){
+      list.sort((a, b) => (a.name || "").localeCompare(b.name || "", "ja"));
+    } else if (candidateSortMode === "unconfirmed_first"){
+      list.sort((a, b) => {
+        const aUnconfirmed = a.status === "unknown" ? 0 : 1;
+        const bUnconfirmed = b.status === "unknown" ? 0 : 1;
+        return aUnconfirmed - bUnconfirmed;
+      });
+    }
+    // "added"（追加順）はcandidates配列の順序をそのまま使う
+    return list;
+  }
+
+  function renderDrawerViews(){
+    renderCandidateListView();
+    renderCompareView();
+    renderHistoryView();
+  }
+
+  function renderCandidateListView(){
+    document.getElementById("candidateSortSelect").value = candidateSortMode;
+    const el = document.getElementById("candidateListBody");
+    const list = sortedCandidates();
+
+    if (list.length === 0){
+      el.innerHTML = `<div class="empty-state">まだ候補がありません。検索結果の「📋 候補に追加」から追加してください。</div>`;
+      return;
+    }
+    el.innerHTML = list.map(c => {
+      const statusBtns = Object.keys(STATUS_LABELS).map(key =>
+        `<button class="status-btn ${c.status === key ? "active-" + key : ""}" onclick="window.__helperNavi.setStatus('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}','${key}')">${STATUS_LABELS[key]}</button>`
+      ).join("");
+
+      const lastCallHtml = c.lastCalledAt
+        ? `<div class="cand-lastcall">📞 最終電話：${escapeHtml(c.lastCalledAt)}</div>`
+        : `<div class="cand-lastcall" style="color:var(--color-text-muted); font-weight:400;">📞 まだ電話していません</div>`;
+
+      return `
+        <div class="candidate-row">
+          <div class="cand-name">${escapeHtml(c.name)} <span style="font-weight:400; font-size:12px; color:var(--color-text-muted);">（${escapeHtml(c.service_type_label)}）</span></div>
+          <div class="cand-address">📍 ${escapeHtml(c.address)}</div>
+          ${lastCallHtml}
+          <input
+            type="text"
+            class="client-label-input"
+            placeholder="利用者名（任意・例：Aさん）"
+            value="${escapeAttr(c.clientLabel || '')}"
+            onchange="window.__helperNavi.setClientLabel('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}', this.value)"
+          >
+          <input
+            type="text"
+            class="memo-input"
+            placeholder="メモ（例：男性ヘルパーのみ空きあり／火曜のみ対応可）"
+            value="${escapeAttr(c.memo || '')}"
+            onchange="window.__helperNavi.setMemo('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}', this.value)"
+          >
+          <div class="status-btns">${statusBtns}</div>
+          <div class="candidate-row-actions">
+            ${c.tel ? `<a class="mini-btn" href="tel:${c.tel_clean || ''}">📞 電話</a>` : ""}
+            ${c.fax ? `<span class="mini-btn">📠 ${escapeHtml(c.fax)}</span>` : ""}
+            <button class="mini-btn referred" onclick="window.__helperNavi.markReferred('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}')">✅ 紹介済みにする</button>
+            <button class="mini-btn danger" onclick="window.__helperNavi.removeCandidate('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}')">🗑 削除</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderCompareView(){
+    const el = document.getElementById("viewCompare");
+    if (candidates.length === 0){
+      el.innerHTML = `<div class="empty-state">比較するには、まず候補リストに事業所を追加してください。</div>`;
+      return;
+    }
+
+    const rows = [
+      { label: "サービス区分", get: c => c.service_type_label },
+      { label: "生活保護対応（AI調査）", get: c => seikatsuhogoCell(c) },
+      { label: "土曜対応", get: c => (c.available_days && c.available_days.saturday) ? "○" : "-" },
+      { label: "日曜対応", get: c => (c.available_days && c.available_days.sunday) ? "○" : "-" },
+      { label: "早朝・夜間対応", get: c => c.early_late_hint ? "○" : "-" },
+      { label: "電話ステータス", get: c => STATUS_LABELS[c.status] || STATUS_LABELS.unknown },
+      { label: "最終電話", get: c => c.lastCalledAt || "-" },
+    ];
+
+    function seikatsuhogoCell(c){
+      const v = c.specialty_tags && c.specialty_tags.seikatsu_hogo;
+      if (v === "specialized") return "◎";
+      if (v === "mentioned") return "○（言及）";
+      return "-";
+    }
+
+    el.innerHTML = `
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr><th>項目</th>${candidates.map(c => `<th>${escapeHtml(c.name)}</th>`).join("")}</tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr><td class="compare-label">${row.label}</td>${candidates.map(c => `<td>${row.get(c)}</td>`).join("")}</tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderHistoryView(){
+    const el = document.getElementById("viewHistory");
+    if (referralHistory.length === 0){
+      el.innerHTML = `<div class="empty-state">紹介履歴はまだありません。候補リストから「✅ 紹介済みにする」を押すと記録されます。</div>`;
+      return;
+    }
+    el.innerHTML = referralHistory.map((h, idx) => `
+      <div class="history-row">
+        <span>${escapeHtml(h.referredAt)}｜${escapeHtml(h.clientLabel || "（利用者名未記入）")}｜${escapeHtml(h.name)}（${escapeHtml(h.service_type_label || "")}）</span>
+        <button class="mini-btn danger" onclick="window.__helperNavi.removeHistory(${idx})">削除</button>
+      </div>
+    `).join("");
+  }
+
+  // 👑 記録用テキスト一括コピー：相談員が使う支援記録システム（カナミック等）に
+  //    そのまま貼り付けられる形式のテキストをクリップボードにコピーする。
+  document.getElementById("btnCopyRecord").addEventListener("click", async () => {
+    if (candidates.length === 0){
+      alert("候補リストが空です。コピーする前に候補を追加してください。");
+      return;
+    }
+    const lines = candidates.map(c => {
+      const statusText = STATUS_LABELS[c.status] || STATUS_LABELS.unknown;
+      const lastCallText = c.lastCalledAt ? `（最終電話：${c.lastCalledAt}）` : "";
+      const memoText = c.memo ? `　メモ：${c.memo}` : "";
+      return `・[${c.name}] ${c.service_type_label}　${statusText}${lastCallText}${memoText}`;
+    });
+    const text = lines.join("\n");
+
+    try{
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById("btnCopyRecord");
+      const original = btn.textContent;
+      btn.textContent = "✅ コピーしました！";
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }catch(e){
+      console.error(e);
+      alert("コピーに失敗しました。お使いのブラウザがクリップボード機能に対応していない可能性があります。");
+    }
+  });
+
+  document.getElementById("btnPrint").addEventListener("click", () => {
+    const printArea = document.getElementById("printArea");
+
+    if (candidates.length === 0){
+      alert("候補リストが空です。印刷する前に候補を追加してください。");
+      return;
+    }
+
+    printArea.innerHTML = `
+      <h1 style="font-family:sans-serif;">ヘルパー事業所 候補リスト（${todayLabel()}時点）</h1>
+      ${candidates.map(c => `
+        <div class="print-card" style="border:1px solid #999; border-radius:8px; padding:12px 16px; margin-bottom:10px; font-family:sans-serif;">
+          <div style="font-weight:bold; font-size:16px;">${escapeHtml(c.name)}（${escapeHtml(c.service_type_label)}）</div>
+          ${c.clientLabel ? `<div>利用者：${escapeHtml(c.clientLabel)}</div>` : ""}
+          <div>住所：${escapeHtml(c.address)}</div>
+          <div>電話：${escapeHtml(c.tel || "情報なし")}</div>
+          <div>FAX：${escapeHtml(c.fax || "情報なし")}</div>
+          <div>ホームページ：${escapeHtml(c.url || "情報なし")}</div>
+          <div>電話ステータス：${STATUS_LABELS[c.status] || STATUS_LABELS.unknown}${c.lastCalledAt ? `（最終電話：${escapeHtml(c.lastCalledAt)}）` : ""}</div>
+          ${c.memo ? `<div>メモ：${escapeHtml(c.memo)}</div>` : ""}
+        </div>
+      `).join("")}
+      <p style="font-size:11px; color:#555; font-family:sans-serif;">
+        ※生活保護対応等の情報はAIによるホームページ調査からの推定です。正確性を保証するものではないため、必ずご自身でご確認ください。
+      </p>
+    `;
+    window.print();
+  });
+
+  window.__helperNavi = {
+    toggleCandidate,
+    removeCandidate,
+    setStatus: setCandidateStatus,
+    setClientLabel: setCandidateClientLabel,
+    setMemo: setCandidateMemo,
+    markReferred: markAsReferred,
+    removeHistory: removeHistoryEntry,
+  };
+
+  updateFabCount();
+
+})();
+</script>
+
+</body>
+</html>
