@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- 👑 iOS Safari等が10桁以上の数字（FAX番号や緯度経度等）を勝手に
+     電話番号リンクへ変換してしまう挙動を防止。実際の電話発信は
+     href="tel:..."を明示的に付与している箇所のみで機能する -->
+<meta name="format-detection" content="telephone=no">
+
 <!-- ============================================================
      🚧 公開前に必ず確認：本番公開の直前にこのnoindexタグを削除してください
      ============================================================ -->

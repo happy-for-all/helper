@@ -96,10 +96,12 @@ SPECIALTY_CATEGORIES = ["seikatsu_hogo"]
 # 早朝・夜間対応の判定に使うキーワード（自由記述からの推定。断定ではない）
 NIGHT_EMERGENCY_KEYWORDS = ["24時間", "緊急", "早朝", "夜間"]
 
-# 👑 バグ修正（2026-07-20）：「12月30日」のような日付表記に含まれる「日」を
-# 曜日の「日曜」と誤検出しないよう、判定前にこのパターンで日付表記を除去する。
-# 実データ検証の結果、この修正により1,007件の「日曜非対応」誤判定を解消。
+# 👑 バグ修正（2026-07-20 第2回）：「12月30日」のような日付表記に加えて、
+# 「祝日」「水曜日」のような、曜日名や祝日を意味する単語に含まれる「日」も
+# 曜日の「日曜」と誤検出しないよう、判定前にこれらの単語を除去する。
+# ※「土日」「土・日」のような、実際に日曜を意味する表記は除去対象外。
 DATE_RANGE_PATTERN = re.compile(r"\d{1,2}月\d{1,2}日|\d{1,2}/\d{1,2}")
+NON_SUNDAY_DAY_WORDS_PATTERN = re.compile(r"月曜日?|火曜日?|水曜日?|木曜日?|金曜日?|土曜日?|祝日|祭日|休日|平日")
 
 
 # ------------------------------------------------------------
@@ -278,6 +280,13 @@ def detect_early_late_from_time_range(time_range_str):
     start_minutes = start_h * 60 + start_m
     end_minutes = end_h * 60 + end_m
 
+    # 👑 改善（2026-07-20）：「09:00-08:59」のように開始時刻より終了時刻が
+    # 早い（＝日を跨いで翌日まで対応）表記は、実データで約100件確認された
+    # 24時間対応・夜間対応のパターンであるため、確実に早朝・夜間対応として扱う。
+    # （終了が00:00ちょうどのケースは、次の分岐で別途24時対応として判定される）
+    if start_minutes > end_minutes and end_minutes != 0:
+        return True
+
     is_early = start_minutes <= 7 * 60
     is_late = end_minutes >= 19 * 60 or end_minutes == 0  # 00:00終了＝24時対応とみなす
 
@@ -327,15 +336,18 @@ def parse_available_days_from_shogai(teikyuubi_raw):
     if any(kw in text for kw in ["なし", "無し", "年中無休"]):
         return days
 
-    # 👑 バグ修正（2026-07-20）：「日」の判定だけは、日付表記
-    # （例："12月30日〜1月3日"）を取り除いたテキストに対して行う。
-    # これにより、年末年始休業のお知らせ等を「日曜非対応」と
-    # 誤判定してしまう問題を解消する。
+    # 👑 バグ修正（2026-07-20 第2回）：日付表記に加えて「祝日」「水曜日」等の
+    # 曜日名・祝日を意味する単語も取り除いたテキストで「日」の有無を判定する。
+    # これにより「祝日」だけが定休日の事業所（日曜は営業）を、誤って
+    # 「日曜非対応」と判定してしまう問題を解消する。
+    # 「土日」「土・日」等の実在する表記は、この単語除去の対象外なので、
+    # 引き続き正しく「日曜非対応」と判定される。
     text_for_sunday_check = DATE_RANGE_PATTERN.sub("", text)
+    text_for_sunday_bare_check = NON_SUNDAY_DAY_WORDS_PATTERN.sub("", text_for_sunday_check)
 
     if "土曜" in text or "土日" in text or "土" in text:
         days["saturday"] = False
-    if "日曜" in text_for_sunday_check or "土日" in text_for_sunday_check or "日" in text_for_sunday_check:
+    if "日曜" in text_for_sunday_check or "土日" in text_for_sunday_check or "日" in text_for_sunday_bare_check:
         days["sunday"] = False
     if "祝" in text:
         days["holiday"] = False
