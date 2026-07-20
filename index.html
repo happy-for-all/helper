@@ -8,38 +8,17 @@
      電話番号リンクへ変換してしまう挙動を防止。実際の電話発信は
      href="tel:..."を明示的に付与している箇所のみで機能する -->
 <meta name="format-detection" content="telephone=no">
-
-<!-- ============================================================
-     🚧 公開前に必ず確認：本番公開の直前にこのnoindexタグを削除してください
-     ============================================================ -->
-<meta name="robots" content="noindex">
-
 <link rel="canonical" href="https://helper-navi.pray-power-is-god-and-cocoro.com/">
-
 <title>ヘルパー事業所ナビ｜訪問介護・居宅介護の事業所を電話・比較・紹介まで一画面で</title>
 <meta name="description" content="訪問介護（介護保険）・居宅介護（障害福祉）のヘルパー事業所を、現在地から近い順に検索。電話・FAX・比較・紹介までを一画面で支援する、相談員のためのツールです。">
-
-<!-- 👑 ファビコンは後日画像を設置予定。コードは仮設置済み -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-
-<!-- ============================================================
-     🚧 AdSense（公開準備が整うまでコメントアウト。有効化する際は
-     このスクリプトタグと、本文中の <ins class="adsbygoogle"> ブロックの
-     コメントを外してください。スクリプト呼び出しは合計1回のみです。
-     ============================================================
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2908004621823900" crossorigin="anonymous"></script>
-============================================================ -->
+
 
 <style>
-/* ============================================================
-   1. デザイントークン（色・フォント・余白の基準値）
-   👑 訪問看護ナビ（houmonkango）と同一トークンを流用し、
-   サイト間のブランド統一・実装コスト削減を図る
-   ============================================================ */
 :root{
   --color-bg: #FAF8F3;
   --color-surface: #FFFFFF;
@@ -551,13 +530,12 @@ a{ color: var(--color-primary-dark); }
      ============================================================ -->
 <header class="site-header">
   <h1>ヘルパー事業所ナビ</h1>
-  <p class="tagline">訪問介護・居宅介護のヘルパー事業所を、電話・比較・紹介まで一画面で</p>
+  <p class="tagline">訪問介護・居宅介護のヘルパー事業所を<br>電話・比較・紹介まで一画面で</p>
   <p class="concept">相談員の仕事は「検索すること」ではなく「利用者さんに最適な事業所を紹介すること」。探す時間を減らし、利用者さんと向き合う時間を増やすためのツールです。</p>
 
   <div class="disclaimer-banner">
     <strong>ご利用にあたって：</strong>
-    本サイトは、厚生労働省「介護サービス情報公表システム」（訪問介護）およびWAM NET「障害福祉サービス等情報公表システム」（居宅介護）のオープンデータをもとに作成しています。
-    生活保護対応等の一部情報はAIによる調査（要確認）です。ご利用の際は必ず電話や公式サイトでご確認ください。
+    本サイトは、厚生労働省「介護サービス情報公表システム」（訪問介護）およびWAM NET「障害福祉サービス等情報公表システム」（居宅介護）のオープンデータをもとに作成しています。ご利用の際は必ず電話や公式サイトでご確認ください。
     <div id="specialtyNotice"></div>
   </div>
 </header>
@@ -599,7 +577,6 @@ a{ color: var(--color-primary-dark); }
     <div class="filter-label">その他の条件</div>
     <div class="chip-list">
       <label class="chip"><input type="checkbox" id="earlyLateFilter">早朝・夜間対応</label>
-      <label class="chip"><input type="checkbox" id="seikatsuhogoFilter">生活保護対応（AI調査済みのみ）</label>
     </div>
   </div>
 </div>
@@ -618,9 +595,6 @@ a{ color: var(--color-primary-dark); }
   </div>
 </div>
 
-<!-- ============================================================
-     🚧 AdSense（コメントアウト中。有効化の際はコメントを外してください）
-     ============================================================
 <ins class="adsbygoogle"
      style="display:block; text-align:center;"
      data-ad-layout="in-article"
@@ -630,7 +604,6 @@ a{ color: var(--color-primary-dark); }
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-============================================================ -->
 
 <!-- ============================================================
      SEOアコーディオンセクション
@@ -762,8 +735,7 @@ a{ color: var(--color-primary-dark); }
 <footer class="site-footer">
   <p id="footerManifestInfo">データ読み込み中…</p>
   <p>
-    データ出典：厚生労働省「介護サービス情報公表システム」（訪問介護）オープンデータ／WAM NET「障害福祉サービス等情報公表システム」（居宅介護）オープンデータ<br>
-    生活保護対応：AIによるホームページ調査（要確認）
+    データ出典：厚生労働省「介護サービス情報公表システム」（訪問介護）オープンデータ／WAM NET「障害福祉サービス等情報公表システム」（居宅介護）オープンデータ
   </p>
 </footer>
 
@@ -1009,7 +981,7 @@ a{ color: var(--color-primary-dark); }
   });
 
   document.getElementById("keywordInput").addEventListener("input", debounce(applyFiltersAndRender, 250));
-  document.querySelectorAll('#serviceTypeFilters input, #dayFilters input, #earlyLateFilter, #seikatsuhogoFilter')
+  document.querySelectorAll('#serviceTypeFilters input, #dayFilters input, #earlyLateFilter')
     .forEach(el => el.addEventListener("change", (e) => {
       const chip = e.target.closest(".chip");
       if (chip) chip.classList.toggle("checked", e.target.checked);
@@ -1034,7 +1006,6 @@ a{ color: var(--color-primary-dark); }
     const checkedServiceTypes = Array.from(document.querySelectorAll('#serviceTypeFilters input:checked')).map(i => i.value);
     const checkedDays = Array.from(document.querySelectorAll('#dayFilters input:checked')).map(i => i.value);
     const earlyLateOnly = document.getElementById("earlyLateFilter").checked;
-    const seikatsuhogoOnly = document.getElementById("seikatsuhogoFilter").checked;
 
     let list = allStations;
 
@@ -1056,10 +1027,6 @@ a{ color: var(--color-primary-dark); }
 
     if (earlyLateOnly){
       list = list.filter(s => s.early_late_hint);
-    }
-
-    if (seikatsuhogoOnly){
-      list = list.filter(s => s.specialty_tags && (s.specialty_tags.seikatsu_hogo === "specialized" || s.specialty_tags.seikatsu_hogo === "mentioned"));
     }
 
     if (userLocation){
