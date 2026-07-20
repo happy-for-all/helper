@@ -517,6 +517,7 @@ a{ color: var(--color-primary-dark); }
 
 .history-row{
   display:flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items:center;
   gap: 8px;
@@ -526,6 +527,7 @@ a{ color: var(--color-primary-dark); }
   margin-bottom: 8px;
   font-size: 13px;
 }
+.history-row span{ min-width: 0; word-break: break-word; }
 
 #printArea{ display:none; }
 @media print{
@@ -1135,9 +1137,13 @@ a{ color: var(--color-primary-dark); }
     const remarksHtml = s.remarks
       ? `<div class="card-remarks">📝 特記事項：${escapeHtml(s.remarks)}</div>` : "";
 
-    const isAdded = candidates.some(c => c.jigyosho_no === s.jigyosho_no && c.service_type === s.service_type);
+    // 👑 バグ修正（2026-07-20）：以前は事業所番号のみで候補の一致判定を
+    // 行っていたが、実データで「同じ事業所番号を持つ複数の支所」が
+    // 存在することが判明したため、build.pyが生成する一意なrecord_idを
+    // 判定・キーとして使用するよう修正した。
+    const isAdded = candidates.some(c => c.record_id === s.record_id);
     const candidateBtnHtml =
-      `<button class="action-btn candidate${isAdded ? " added" : ""}" data-jigyosho-no="${escapeAttr(s.jigyosho_no)}" data-service-type="${escapeAttr(s.service_type)}" onclick="window.__helperNavi.toggleCandidate('${escapeAttr(s.jigyosho_no)}','${escapeAttr(s.service_type)}')">
+      `<button class="action-btn candidate${isAdded ? " added" : ""}" data-record-id="${escapeAttr(s.record_id)}" onclick="window.__helperNavi.toggleCandidate('${escapeAttr(s.record_id)}')">
         ${isAdded ? "✓ 候補に追加済み" : "📋 候補に追加"}
       </button>`;
 
@@ -1226,16 +1232,15 @@ a{ color: var(--color-primary-dark); }
   function saveCandidates(){ saveToStorage(CANDIDATES_KEY, candidates); }
   function saveHistory(){ saveToStorage(HISTORY_KEY, referralHistory); }
 
-  function candidateKey(jigyoshoNo, serviceType){ return `${serviceType}:${jigyoshoNo}`; }
-
-  function toggleCandidate(jigyoshoNo, serviceType){
-    const idx = candidates.findIndex(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+  function toggleCandidate(recordId){
+    const idx = candidates.findIndex(c => c.record_id === recordId);
     if (idx >= 0){
       candidates.splice(idx, 1);
     } else {
-      const station = allStations.find(s => s.jigyosho_no === jigyoshoNo && s.service_type === serviceType);
+      const station = allStations.find(s => s.record_id === recordId);
       if (!station) return;
       candidates.push({
+        record_id: station.record_id,
         jigyosho_no: station.jigyosho_no,
         service_type: station.service_type,
         service_type_label: SERVICE_TYPE_LABELS[station.service_type] || station.service_type,
@@ -1263,16 +1268,15 @@ a{ color: var(--color-primary-dark); }
 
   function refreshCandidateButtons(){
     document.querySelectorAll(".action-btn.candidate").forEach(btn => {
-      const no = btn.getAttribute("data-jigyosho-no");
-      const svc = btn.getAttribute("data-service-type");
-      const added = candidates.some(c => c.jigyosho_no === no && c.service_type === svc);
+      const recordId = btn.getAttribute("data-record-id");
+      const added = candidates.some(c => c.record_id === recordId);
       btn.classList.toggle("added", added);
       btn.textContent = added ? "✓ 候補に追加済み" : "📋 候補に追加";
     });
   }
 
-  function removeCandidate(jigyoshoNo, serviceType){
-    candidates = candidates.filter(c => !(c.jigyosho_no === jigyoshoNo && c.service_type === serviceType));
+  function removeCandidate(recordId){
+    candidates = candidates.filter(c => c.record_id !== recordId);
     saveCandidates();
     updateFabCount();
     refreshCandidateButtons();
@@ -1285,8 +1289,8 @@ a{ color: var(--color-primary-dark); }
 
   // 👑 最終電話日：ステータスを変更するたびに「今日」を自動記録する。
   //    相談員の「電話したっけ？」を即座に解消するための機能。
-  function setCandidateStatus(jigyoshoNo, serviceType, status){
-    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+  function setCandidateStatus(recordId, status){
+    const c = candidates.find(c => c.record_id === recordId);
     if (c){
       c.status = status;
       c.lastCalledAt = todayLabel();
@@ -1295,8 +1299,8 @@ a{ color: var(--color-primary-dark); }
     }
   }
 
-  function setCandidateClientLabel(jigyoshoNo, serviceType, label){
-    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+  function setCandidateClientLabel(recordId, label){
+    const c = candidates.find(c => c.record_id === recordId);
     if (c){
       c.clientLabel = label;
       saveCandidates();
@@ -1304,16 +1308,16 @@ a{ color: var(--color-primary-dark); }
   }
 
   // 👑 フリーメモ欄：「男性ヘルパーのみ空きあり」等、電話で聞いた内容を記録
-  function setCandidateMemo(jigyoshoNo, serviceType, memo){
-    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+  function setCandidateMemo(recordId, memo){
+    const c = candidates.find(c => c.record_id === recordId);
     if (c){
       c.memo = memo;
       saveCandidates();
     }
   }
 
-  function markAsReferred(jigyoshoNo, serviceType){
-    const c = candidates.find(c => c.jigyosho_no === jigyoshoNo && c.service_type === serviceType);
+  function markAsReferred(recordId){
+    const c = candidates.find(c => c.record_id === recordId);
     if (!c) return;
     const clientLabel = window.prompt("どなたの候補として紹介しましたか？（任意・例：Aさん）", c.clientLabel || "") || "";
     referralHistory.unshift({
@@ -1400,7 +1404,7 @@ a{ color: var(--color-primary-dark); }
     }
     el.innerHTML = list.map(c => {
       const statusBtns = Object.keys(STATUS_LABELS).map(key =>
-        `<button class="status-btn ${c.status === key ? "active-" + key : ""}" onclick="window.__helperNavi.setStatus('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}','${key}')">${STATUS_LABELS[key]}</button>`
+        `<button class="status-btn ${c.status === key ? "active-" + key : ""}" onclick="window.__helperNavi.setStatus('${escapeAttr(c.record_id)}','${key}')">${STATUS_LABELS[key]}</button>`
       ).join("");
 
       const lastCallHtml = c.lastCalledAt
@@ -1417,21 +1421,21 @@ a{ color: var(--color-primary-dark); }
             class="client-label-input"
             placeholder="利用者名（任意・例：Aさん）"
             value="${escapeAttr(c.clientLabel || '')}"
-            onchange="window.__helperNavi.setClientLabel('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}', this.value)"
+            onchange="window.__helperNavi.setClientLabel('${escapeAttr(c.record_id)}', this.value)"
           >
           <input
             type="text"
             class="memo-input"
             placeholder="メモ（例：男性ヘルパーのみ空きあり／火曜のみ対応可）"
             value="${escapeAttr(c.memo || '')}"
-            onchange="window.__helperNavi.setMemo('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}', this.value)"
+            onchange="window.__helperNavi.setMemo('${escapeAttr(c.record_id)}', this.value)"
           >
           <div class="status-btns">${statusBtns}</div>
           <div class="candidate-row-actions">
             ${c.tel ? `<a class="mini-btn" href="tel:${c.tel_clean || ''}">📞 電話</a>` : ""}
             ${c.fax ? `<span class="mini-btn">📠 ${escapeHtml(c.fax)}</span>` : ""}
-            <button class="mini-btn referred" onclick="window.__helperNavi.markReferred('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}')">✅ 紹介済みにする</button>
-            <button class="mini-btn danger" onclick="window.__helperNavi.removeCandidate('${escapeAttr(c.jigyosho_no)}','${escapeAttr(c.service_type)}')">🗑 削除</button>
+            <button class="mini-btn referred" onclick="window.__helperNavi.markReferred('${escapeAttr(c.record_id)}')">✅ 紹介済みにする</button>
+            <button class="mini-btn danger" onclick="window.__helperNavi.removeCandidate('${escapeAttr(c.record_id)}')">🗑 削除</button>
           </div>
         </div>
       `;
