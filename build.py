@@ -47,8 +47,8 @@ OUTPUT_DIR = "dist"
 # 確認が取れていますが、居宅介護（WAM NET）側の時点表記は未確認です。
 # ダウンロード元ページに記載されている正式な時点表記を確認したうえで、
 # 下記のSHOGAI_CSV_SOURCE_LABELを正しい値に更新してください。
-KAIGO_CSV_SOURCE_LABEL = "2025年12月末時点（厚労省・介護サービス情報公表システム）"
-SHOGAI_CSV_SOURCE_LABEL = "2026年3月時点（WAM NET・障害福祉サービス等情報公表システム）"
+KAIGO_CSV_SOURCE_LABEL = "2026年6月末時点（厚労省・介護サービス情報公表システム）"
+SHOGAI_CSV_SOURCE_LABEL = "2026年9月末時点（WAM NET・障害福祉サービス等情報公表システム）"
 
 # サービス区分バッジ（フロント表示用の固定ラベル）
 SERVICE_TYPE_KAIGO = "care_insurance_homehelp"
